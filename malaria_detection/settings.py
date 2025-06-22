@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-m-mino-y=1eqwqn$&5g5q_(d%n(bs+ow+!#op&d*wtljp9@y8@
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'app-classification-cat.onrender.com',
+    'app-malaria-detection.onrender.com',
     'localhost',
     '127.0.0.1',
     ]
