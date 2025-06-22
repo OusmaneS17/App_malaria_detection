@@ -1,0 +1,85 @@
+{% extends "malaria_app/base.html" %}
+{% load static %}
+
+    {% block NavBar %}
+        <a href= '{% url "index" %}' class="main-nav-item activate">Accueil</a>
+        <a href= '{% url "prediction" %}' class="main-nav-item">Détection du paludisme à partir d'un frottis sanguin</a>
+    {% endblock  %}
+
+    {% block content %}
+            <!--Page d'Accueil-->
+                <div class="main-block">
+                    <div class="stat">
+                    <header id = "headStat1" name="headStat1">Score AUC du modèle</header>
+                    <div id="stat1"></div>
+                    </div>
+
+                    <div class="stat">
+                        <header id = "headStat2" name="headStat2">Score F1 du modèle</header>
+                        <div id="stat2"></div>
+                    </div>
+
+                    <div class="stat">
+                        <header id = "headStat3"  name="headStat3">Précision du modèle</header>
+                        <div id="stat3"></div>
+                    </div>
+
+                    <div class= description>
+                        <h1>Description du projet</h1>
+                        <p>
+                        Les outils de diagnostic les plus avancés utilisés en Afrique pour détecter le paludisme sont souvent importés d'autres pays. Notre projet vise à développer une solution locale adaptée aux besoins spécifiques des régions endémiques.
+                        </p><p>
+                        Nous avons créé un modèle d'intelligence artificielle capable de détecter la présence du parasite Plasmodium dans les frottis sanguins avec une grande précision, disponible sur cette plateforme web.
+                        </p><p>
+                        Cette innovation constitue un outil diagnostique précieux pour les centres de santé, en particulier dans les zones rurales. Elle permet un dépistage rapide et fiable du paludisme, facilitant la prise en charge précoce des patients. Les données utilisées proviennent de laboroires partenaires en Afrique subsaharienne.
+                        </p>
+                    <div>
+
+                    <!--Mode d'emploi-->
+                    <div class="description">
+                        <h1>Mode d'utilisation</h1>
+                        <p> Procédure pour détecter le paludisme à partir d'un frottis sanguin :</p>
+                            <ul>
+                                <li><p>Accédez à la section <a href= {% url "prediction" %}>Détection du paludisme</a> dans le menu</p></li>
+                                <li><p>Remplissez les informations patient et téléversez l'image du frottis sanguin</p></li>
+                                <li><p>Cliquez sur "Analyser" pour lancer le diagnostic automatisé</p></li>
+                                <li><p>Attendez quelques secondes pendant que notre algorithme examine l'échantillon</p></li>
+                            </ul>
+                        <p>Le résultat indiquera la présence ou l'absence de parasites malaria avec un indice de confiance.</p>
+                    </div>
+                </div>
+     {% endblock  %}
+
+<!--Scripts AJAX-->
+    {% block AjaxScript %}
+        <script type="text/JAVASCRIPT">
+            // Métriques de performance
+            let AUC = 99;
+            let F1Score = 96;
+            let accuracy = 96;
+
+            function StatAccurary(idStat, stat, count = 0) {
+                this.element = document.getElementById(idStat);
+                this.stat = stat;
+                this.count = count;
+                this.interval = setInterval(this.updateStat.bind(this), 1500 / this.stat);
+            }
+
+            StatAccurary.prototype.updateStat = function () {
+                if (this.count <= this.stat) {
+                    if (this.count >= this.stat*0.5) {
+                        this.element.textContent = this.count + "%";
+                    }
+                    if (this.count <= this.stat*0.8) {
+                        this.element.style.height = `${(this.count/this.stat)*100}%`;
+                    }
+                    this.count++;
+                } else {
+                    clearInterval(this.interval);
+                }
+            }
+            let stat1 = new StatAccurary('stat1', AUC);
+            let stat2 = new StatAccurary('stat2', F1Score);
+            let stat3 = new StatAccurary('stat3', accuracy);
+        </script>
+    {% endblock  %}

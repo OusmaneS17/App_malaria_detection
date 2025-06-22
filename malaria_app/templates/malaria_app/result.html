@@ -1,0 +1,48 @@
+{% extends "malaria_app/base.html" %}
+{% load static %}
+
+{% block NavBar %}
+    <a href='{% url "index" %}' class="main-nav-item activate">Accueil</a>
+    <a href='{% url "prediction" %}' class="main-nav-item">Détection du Paludisme</a>
+{% endblock %}
+
+{% block content %}
+    <h1 id="TitreResult">Résultats de Détection du Paludisme</h1>
+    <div id="prediction" class="main-block">
+        <div class="col45" id="resultContent">
+            <p>Notre modèle avancé d'apprentissage profond a analysé l'image de frottis sanguin et a détecté
+               <span class="highlight">{{ prediction }}</span> du paludisme avec
+               <span class="highlight">{{ confidence|floatformat:2 }}%</span> de confiance.</p>
+            
+            <strong>Fonctionnement de l'analyse :</strong>
+            <ul>
+                <li>Étape 1 : L'image du frottis sanguin est prétraitée pour améliorer la visibilité des parasites</li>
+                <li>Étape 2 : Le modèle scanne l'image à la recherche des motifs de parasites du paludisme</li>
+                <li>Étape 3 : Plusieurs couches de réseaux neuronaux analysent les structures cellulaires</li>
+                <li>Étape 4 : Le modèle génère un score de confiance pour l'infection</li>
+            </ul>
+            
+            <p>La détection précoce du paludisme est cruciale pour un traitement efficace. Cette analyse assistée par IA aide
+               les professionnels de santé à établir des diagnostics plus rapides et plus précis.</p>
+        </div>
+        
+        <div id="preview" class="col45">
+            <!-- Affichage de l'image téléchargée -->
+            {% if image_url %}
+                <img src="{{ image_url }}" alt="Frottis sanguin téléchargé" style="max-width: 100%; max-height: 300px; margin-bottom: 20px;">
+            {% endif %}
+            
+            <h2 id="Summary">Résumé :</h2>
+            <ul>
+                <li><p>Patient : <span class="highlight">{{ patient_name }}</span></p></li>
+                <li><p>Note médicale : <span class="highlight">{{ medical_notes }}</span></p></li>
+                <li><p>Résultat de détection : <span class="highlight">{{ prediction }}</span></p></li>
+                <li><p>Niveau de confiance : <span class="highlight">{{ confidence|floatformat:2 }}%</span></p></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="try-again">
+        <a href='{% url "prediction" %}' class="button">Essayer une autre image</a>
+    </div>
+{% endblock %}

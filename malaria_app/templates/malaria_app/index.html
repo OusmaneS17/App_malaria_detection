@@ -1,0 +1,74 @@
+<!-- malaria_app/templates/malaria_app/index.html -->
+
+{% extends "malaria_app/base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block NavBar %}
+    <a href= '{% url "index" %}' class="main-nav-item activate">Accueil</a>
+    <a href= '{% url "prediction" %}' class="main-nav-item">Détection du paludisme à partir d'un frottis sanguin</a>
+{% endblock  %}
+{% block content %}
+    <!-- malaria_app/templates/malaria_app/index.html -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" 
+               id="patient_name"
+               name="paatient_name" 
+               class="form-control"
+               placeholder="Entrez le nom complet"
+               required
+               value="{{ form.paatient_name.value|default:'' }}">
+    
+    
+
+    <div class="form-group file-upload">
+        <label for="BloodSmearImg" class="custom-file-upload">
+            <i class="fas fa-cloud-upload-alt"></i> Choisir une image de frottis sanguin
+        </label>
+        <input id="BloodSmearImg" 
+               name="image" 
+               type="file"
+               accept=".jpg,.jpeg,.png,.webp"
+               required
+               onchange="updateLabel()">
+        {% if form.image.errors %}
+            <div class="error-message">{{ form.image.errors }}</div>
+        {% endif %}
+        <div class="image-preview" id="imagePreview"></div>
+    </div>
+
+    <textarea type="textarea" 
+               id="noteMedical"
+               name="noteMedical" 
+               class="form-control"
+               placeholder="Entrez la note medicale"
+               required
+               value="{{ form.noteMedical.value|default:'' }}"></textarea>
+
+    
+    
+    <input id="submit" type="submit" value="Analyze">
+</form>
+{% endblock  %}
+
+{% block AjaxScript %}
+<script type="text/javascript">
+    function updateLabel() {
+            var input = document.getElementById('BloodSmearImg');
+            var label = document.querySelector('label[for="BloodSmearImg"]');
+            var fileName = input.files[0].name;
+            var maxLength = 25;
+        
+            if (fileName.length > maxLength) {
+                var truncatedFileName = fileName.substring(0, maxLength - 3) + '...';
+                label.textContent = truncatedFileName;
+            } else {
+                label.textContent = fileName;
+            }
+        }
+</script>
+{% endblock  %}
